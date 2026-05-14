@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>深淵訓練紀錄</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#080b10" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="深淵紀錄" />
+  <style>
+    :root{
+      --bg:#07090d;
+      --panel:#101722;
+      --panel2:#151d2a;
+      --line:#2f4158;
+      --text:#f4e6c8;
+      --muted:#a8b1bd;
+      --gold:#c89b3c;
+      --gold2:#f0d48a;
+      --red:#b8333b;
+      --purple:#7d3cff;
+      --blue:#2e8cff;
+      --grey:#6f7785;
+      --success:#68d391;
+      --danger:#ff5c6c;
+      --shadow:0 24px 80px rgba(0,0,0,.45);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;
+      background:
+        radial-gradient(circle at 18% 8%, rgba(200,155,60,.22), transparent 26%),
+        radial-gradient(circle at 85% 20%, rgba(46,140,255,.14), transparent 25%),
+        radial-gradient(circle at 60% 90%, rgba(125,60,255,.18), transparent 28%),
+        linear-gradient(135deg,#05070a 0%,#0c1118 40%,#080b10 100%);
+      color:var(--text);
+    }
+    button,input,select,textarea{font:inherit}
+    button{
+      border:1px solid rgba(240,212,138,.28);
+      color:var(--text);
+      background:linear-gradient(180deg,#1c2635,#101722);
+      border-radius:14px;
+      padding:10px 13px;
+      cursor:pointer;
+      font-weight:800;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+    button:hover{filter:brightness(1.12)}
+    button.primary{background:linear-gradient(180deg,#c89b3c,#7a561b);color:#101010;border-color:#f0d48a}
+    button.danger{background:linear-gradient(180deg,#b8333b,#6b1f27);border-color:#ff7a83}
+    button.ghost{background:rgba(255,255,255,.04)}
+    input,select,textarea{
+      width:100%;border:1px solid rgba(240,212,138,.22);border-radius:14px;
+      background:rgba(3,7,12,.55);color:var(--text);padding:11px 12px;outline:none;
+    }
+    textarea{min-height:82px;resize:vertical}
+    input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(200,155,60,.12)}
+    .app{width:min(1300px,calc(100% - 26px));margin:18px auto 34px}
+    .hero{
+      position:relative;overflow:hidden;
+      border:1px solid rgba(240,212,138,.28);border-radius:28px;
+      background:
+        linear-gradient(135deg,rgba(15,26,38,.96),rgba(7,9,13,.96)),
+        radial-gradient(circle at 72% 40%, rgba(200,155,60,.18), transparent 28%);
+      box-shadow:var(--shadow);padding:24px;
+    }
+    .hero:before{
+      content:"";position:absolute;inset:-2px;
+      background:linear-gradient(120deg,transparent,rgba(240,212,138,.08),transparent);
+      pointer-events:none;
+    }
+    .hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;position:relative}
+    h1{margin:0;font-size:30px;letter-spacing:.5px}
+    .subtitle{color:var(--muted);margin-top:8px;line-height:1.55}
+    .nav{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px;position:relative}
+    .nav-card{
+      border-radius:22px;border:1px solid rgba(240,212,138,.22);padding:18px;min-height:132px;
+      background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+      cursor:pointer;position:relative;overflow:hidden;
+    }
+    .nav-card.active{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,155,60,.14),0 18px 48px rgba(0,0,0,.35)}
+    .nav-card h2{margin:0;font-size:22px}
+    .nav-card p{color:var(--muted);margin:8px 0 0;font-size:14px;line-height:1.45}
+    .sigil{position:absolute;right:14px;bottom:8px;font-size:54px;opacity:.18}
+    .chogath{background:radial-gradient(circle at right bottom,rgba(184,51,59,.42),transparent 38%),linear-gradient(135deg,rgba(45,9,18,.9),rgba(16,9,22,.95))}
+    .nasus{background:radial-gradient(circle at right bottom,rgba(200,155,60,.42),transparent 38%),linear-gradient(135deg,rgba(28,29,32,.92),rgba(9,12,16,.96))}
+    .kalis{background:radial-gradient(circle at right bottom,rgba(46,140,255,.36),transparent 38%),linear-gradient(135deg,rgba(31,18,70,.92),rgba(5,14,28,.96))}
+    .content{margin-top:18px;display:grid;grid-template-columns:320px 1fr;gap:18px}
+    .side,.main{
+      border:1px solid rgba(240,212,138,.22);border-radius:24px;background:rgba(10,16,24,.78);
+      box-shadow:var(--shadow);padding:18px;backdrop-filter:blur(10px);
+    }
+    .side{height:calc(100vh - 286px);min-height:520px;position:sticky;top:14px;overflow:hidden;display:flex;flex-direction:column}
+    .section-title{font-size:13px;letter-spacing:.8px;color:var(--gold2);font-weight:900;margin:14px 0 8px;text-transform:uppercase}
+    .history{overflow:auto;flex:1;padding-right:4px}
+    .history-item{
+      width:100%;text-align:left;margin-bottom:10px;padding:12px;border-radius:16px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--text);
+    }
+    .history-item.active{border-color:var(--gold);background:rgba(200,155,60,.08)}
+    .history-row{display:flex;justify-content:space-between;gap:8px}
+    .muted{color:var(--muted);font-size:13px}
+    .pill{display:inline-flex;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:900;border:1px solid rgba(255,255,255,.12)}
+    .pill.red{background:rgba(184,51,59,.18);color:#ff9aa2}.pill.gold{background:rgba(200,155,60,.18);color:#f0d48a}.pill.blue{background:rgba(46,140,255,.18);color:#9cc9ff}.pill.purple{background:rgba(125,60,255,.18);color:#c2a8ff}.pill.grey{background:rgba(150,160,170,.15);color:#cbd5e1}
+    .topbar{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:16px}
+    .topbar h2{margin:0;font-size:26px}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .panel{border:1px solid rgba(255,255,255,.08);border-radius:20px;background:rgba(255,255,255,.035);padding:16px;margin-bottom:16px}
+    .grid{display:grid;gap:10px}
+    .grid-2{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:repeat(3,1fr)}.grid-4{grid-template-columns:repeat(4,1fr)}.grid-6{grid-template-columns:1.2fr .8fr repeat(4,.7fr)}
+    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .summary-card{padding:15px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px solid rgba(240,212,138,.16)}
+    .summary-card .value{font-size:25px;font-weight:950;margin-top:4px}.summary-card .target{font-size:12px;color:var(--muted);margin-top:4px}
+    .progress{height:7px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px}.progress span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+    table{width:100%;border-collapse:collapse}th,td{padding:11px 9px;border-bottom:1px solid rgba(255,255,255,.08);text-align:center;font-size:14px}th{color:var(--gold2);font-size:12px}td:first-child,th:first-child{text-align:left}
+    .empty{text-align:center;color:var(--muted);padding:28px}
+    .exercise-card{border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:14px;margin-bottom:12px;background:rgba(255,255,255,.035)}
+    .exercise-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+    .set-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:8px}
+    .modal{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.58);padding:20px;overflow:auto}
+    .modal.show{display:grid;place-items:start center}
+    .modal-card{width:min(920px,100%);background:#0c121b;padding:20px;margin-top:24px}
+    .modal-header{display:flex;justify-content:space-between;gap:14px;margin-bottom:14px}
+    @media(max-width:980px){.content{grid-template-columns:1fr}.side{height:auto;min-height:0;position:static;max-height:360px}.nav{grid-template-columns:1fr}.summary,.grid-4,.grid-6{grid-template-columns:1fr 1fr}.hero-top,.topbar{flex-direction:column}.toolbar{justify-content:flex-start}}
+    @media(max-width:600px){.app{width:calc(100% - 14px);margin:8px auto}.hero,.side,.main{padding:14px;border-radius:20px}.summary,.grid-2,.grid-3,.grid-4,.grid-6{grid-template-columns:1fr}table{display:block;overflow-x:auto}h1{font-size:24px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <section class="hero">
+    <div class="hero-top">
+      <div>
+        <h1>深淵訓練紀錄</h1>
+        <div class="subtitle">三個檔案：科加斯飲食、納瑟斯訓練、卡利斯體態。資料保存在本機瀏覽器，可離線使用。</div>
+      </div>
+      <div class="toolbar">
+        <button class="ghost" onclick="exportAll()">匯出全部備份</button>
+        <button class="ghost" onclick="document.getElementById('importFile').click()">匯入備份</button>
+        <input id="importFile" type="file" accept="application/json" style="display:none" onchange="importAll(event)">
+      </div>
+    </div>
+    <div class="nav">
+      <div class="nav-card chogath active" id="nav-food" onclick="switchModule('food')"><h2>科加斯檔案</h2><p>每日飲食、熱量、三大營養素、減脂/增肌方針。</p><div class="sigil">獸</div></div>
+      <div class="nav-card nasus" id="nav-training" onclick="switchModule('training')"><h2>納瑟斯檔案</h2><p>推、拉、腿訓練紀錄。可繼承過去某天的項目。</p><div class="sigil">神</div></div>
+      <div class="nav-card kalis" id="nav-body" onclick="switchModule('body')"><h2>卡利斯檔案</h2><p>體重、腰圍、臂圍與補碳日標記。</p><div class="sigil">蟲</div></div>
+    </div>
+  </section>
+
+  <section class="content">
+    <aside class="side">
+      <button class="primary" onclick="jumpToday()">回到今天</button>
+      <div class="section-title" id="historyTitle">歷史紀錄</div>
+      <div class="history" id="historyList"></div>
+    </aside>
+    <main class="main" id="mainContent"></main>
+  </section>
+</div>
+
+<div class="modal" id="settingsModal">
+  <div class="modal-card">
+    <div class="modal-header"><div><h2 style="margin:0">設定科加斯飲食方針</h2><div class="muted">可修改減脂肪/增肌在不同日型下的文字與目標數值。</div></div><button onclick="closeSettings()">關閉</button></div>
+    <div id="settingsContent"></div>
+    <div class="panel">
+      <div class="section-title">新增自訂飲食方針</div>
+      <div class="grid grid-2"><input id="newStrategyName" placeholder="例如 維持體重 / 小幅增肌"><button onclick="addStrategy()">新增方針</button></div>
+    </div>
+    <button class="primary" onclick="saveSettings()">儲存設定</button>
+    <button class="ghost" onclick="resetSettings()">恢復預設</button>
+  </div>
+</div>
+
+<script>
+const STORE="abyssTrackerPWA_v1";
+const today=()=>new Date().toISOString().slice(0,10);
+const defaultState={
+  module:"food",
+  dates:{food:today(),training:today(),body:today()},
+  food:{
+    records:{},
+    dayTypes:[{id:"training",name:"訓練日"},{id:"carb",name:"補碳日"},{id:"rest",name:"休息日"}],
+    strategies:{
+      cutting:{name:"減脂肪",notes:{
+        training:"訓練日 2600 kcal / 蛋白質 160g / 脂肪 90g / 碳水 200g",
+        carb:"補碳日 2800 kcal / 蛋白質 160g / 脂肪 70g / 碳水 350g",
+        rest:"休息日 2400 kcal / 蛋白質 160g / 脂肪 90g / 碳水 160g"},
+        targets:{training:{calories:2600,protein:160,fat:90,carbs:200},carb:{calories:2800,protein:160,fat:70,carbs:350},rest:{calories:2400,protein:160,fat:90,carbs:160}}},
+      bulking:{name:"增肌",notes:{
+        training:"訓練日 3200 kcal / 蛋白質 180g / 脂肪 80g / 碳水 430g",
+        carb:"補碳日 3400 kcal / 蛋白質 180g / 脂肪 70g / 碳水 500g",
+        rest:"休息日 2900 kcal / 蛋白質 180g / 脂肪 90g / 碳水 330g"},
+        targets:{training:{calories:3200,protein:180,fat:80,carbs:430},carb:{calories:3400,protein:180,fat:70,carbs:500},rest:{calories:2900,protein:180,fat:90,carbs:330}}}
+    }
+  },
+  training:{records:{}},
+  body:{records:{}}
+};
+let state=load();
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function load(){try{return deepMerge(clone(defaultState),JSON.parse(localStorage.getItem(STORE))||{})}catch{return clone(defaultState)}}
+function deepMerge(a,b){for(const k in b){if(b[k]&&typeof b[k]==="object"&&!Array.isArray(b[k])) a[k]=deepMerge(a[k]||{},b[k]); else a[k]=b[k]}return a}
+function save(){localStorage.setItem(STORE,JSON.stringify(state))}
+function esc(x){return String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function switchModule(m){state.module=m;save();render()}
+function jumpToday(){state.dates[state.module]=today();save();render()}
+function getFoodRecord(date=state.dates.food){state.food.records[date]??={dayType:"training",strategy:"cutting",foods:[]};return state.food.records[date]}
+function getTrainingRecord(date=state.dates.training){state.training.records[date]??={type:"push",exercises:[]};return state.training.records[date]}
+function getBodyRecord(date=state.dates.body){state.body.records[date]??={weight:"",waist:"",arm:"",carb:false};return state.body.records[date]}
+function foodTotals(date=state.dates.food){return getFoodRecord(date).foods.reduce((a,f)=>{a.calories+=+f.calories||0;a.protein+=+f.protein||0;a.fat+=+f.fat||0;a.carbs+=+f.carbs||0;return a},{calories:0,protein:0,fat:0,carbs:0})}
+function dayName(id){return state.food.dayTypes.find(x=>x.id===id)?.name||"未設定"}
+function dayClass(id){return id==="training"?"gold":id==="carb"?"purple":id==="rest"?"grey":"grey"}
+function currentDate(){return state.dates[state.module]}
+function setDate(d){state.dates[state.module]=d;save();render()}
+
+function render(){
+  document.querySelectorAll(".nav-card").forEach(x=>x.classList.remove("active"));
+  document.getElementById("nav-"+state.module).classList.add("active");
+  renderHistory();
+  if(state.module==="food") renderFood();
+  if(state.module==="training") renderTraining();
+  if(state.module==="body") renderBody();
+  save();
+}
+function renderHistory(){
+  const h=document.getElementById("historyList"), title=document.getElementById("historyTitle");
+  let dates=[], html="";
+  if(state.module==="food"){
+    title.textContent="科加斯歷史飲食";
+    dates=Object.keys(state.food.records).sort((a,b)=>b.localeCompare(a));
+    html=dates.map(d=>{const r=getFoodRecord(d),t=foodTotals(d);return `<button class="history-item ${d===state.dates.food?"active":""}" onclick="setDate('${d}')"><div class="history-row"><strong>${d}</strong><span class="pill ${dayClass(r.dayType)}">${dayName(r.dayType)}</span></div><div class="history-row muted"><span>${state.food.strategies[r.strategy]?.name||""}</span><span>${t.calories.toFixed(0)} kcal</span></div></button>`}).join("");
+  }
+  if(state.module==="training"){
+    title.textContent="納瑟斯歷史訓練";
+    dates=Object.keys(state.training.records).sort((a,b)=>b.localeCompare(a));
+    html=dates.map(d=>{const r=getTrainingRecord(d);return `<button class="history-item ${d===state.dates.training?"active":""}" onclick="setDate('${d}')"><div class="history-row"><strong>${d}</strong><span class="pill gold">${typeName(r.type)}</span></div><div class="muted">${r.exercises.length} 個項目</div></button>`}).join("");
+  }
+  if(state.module==="body"){
+    title.textContent="卡利斯歷史體態";
+    dates=Object.keys(state.body.records).sort((a,b)=>b.localeCompare(a));
+    html=dates.map(d=>{const r=getBodyRecord(d);return `<button class="history-item ${d===state.dates.body?"active":""}" onclick="setDate('${d}')"><div class="history-row"><strong>${d}</strong>${r.carb?'<span class="pill purple">補碳日</span>':'<span class="pill blue">一般日</span>'}</div><div class="muted">${r.weight||"-"} kg / 腰 ${r.waist||"-"} / 臂 ${r.arm||"-"}</div></button>`}).join("");
+  }
+  h.innerHTML=html||'<div class="empty">尚無紀錄。</div>';
+}
+function renderFood(){
+ const d=state.dates.food,r=getFoodRecord(),t=foodTotals(),target=state.food.strategies[r.strategy]?.targets?.[r.dayType]||{};
+ const note=state.food.strategies[r.strategy]?.notes?.[r.dayType]||"尚未設定";
+ document.getElementById("mainContent").innerHTML=`
+ <div class="topbar"><div><h2>科加斯檔案｜${d===today()?"今日飲食":d}</h2><div class="muted">${state.food.strategies[r.strategy]?.name||""}｜${dayName(r.dayType)}：${esc(note)}</div></div>
+ <div class="toolbar"><button class="ghost" onclick="openSettings()">設定方針</button><button class="danger" onclick="clearFood()">清除當日</button></div></div>
+ <div class="panel"><div class="grid grid-3"><div><div class="section-title">日期</div><input type="date" value="${d}" onchange="state.dates.food=this.value;render()"></div><div><div class="section-title">小標籤</div><select onchange="getFoodRecord().dayType=this.value;render()">${state.food.dayTypes.map(x=>`<option value="${x.id}" ${x.id===r.dayType?"selected":""}>${x.name}</option>`).join("")}</select></div><div><div class="section-title">飲食方針</div><select onchange="getFoodRecord().strategy=this.value;render()">${Object.entries(state.food.strategies).map(([id,s])=>`<option value="${id}" ${id===r.strategy?"selected":""}>${s.name}</option>`).join("")}</select></div></div></div>
+ <div class="summary">${summaryCard("熱量 kcal",t.calories,target.calories,"calories")}${summaryCard("蛋白質 g",t.protein,target.protein,"protein")}${summaryCard("脂肪 g",t.fat,target.fat,"fat")}${summaryCard("碳水 g",t.carbs,target.carbs,"carbs")}</div>
+ <div class="panel"><div class="section-title">新增食物</div><div class="grid grid-6"><input id="foodName" placeholder="食物名稱"><input id="foodAmount" placeholder="份量"><input id="foodCal" type="number" placeholder="熱量"><input id="foodPro" type="number" placeholder="蛋白質"><input id="foodFat" type="number" placeholder="脂肪"><input id="foodCarb" type="number" placeholder="碳水"></div><div style="margin-top:10px"><button class="primary" onclick="addFood()">新增</button></div></div>
+ <div class="panel"><div class="section-title">當日明細</div><table><thead><tr><th>食物</th><th>份量</th><th>熱量</th><th>蛋白質</th><th>脂肪</th><th>碳水</th><th></th></tr></thead><tbody>${r.foods.length?r.foods.map((f,i)=>`<tr><td><strong>${esc(f.name)}</strong></td><td>${esc(f.amount)}</td><td>${(+f.calories).toFixed(1)}</td><td>${(+f.protein).toFixed(1)}</td><td>${(+f.fat).toFixed(1)}</td><td>${(+f.carbs).toFixed(1)}</td><td><button class="danger" onclick="deleteFood(${i})">刪除</button></td></tr>`).join(""):'<tr><td colspan="7" class="empty">這一天還沒有紀錄食物。</td></tr>'}</tbody></table></div>`;
+}
+function summaryCard(label,val,target,key){const p=target?Math.min(100,val/target*100):0;return `<div class="summary-card"><div class="muted">${label}</div><div class="value">${(+val).toFixed(key==="calories"?0:1)}</div><div class="target">目標：${target||"未設定"}</div><div class="progress"><span style="width:${p}%"></span></div></div>`}
+function addFood(){const f={name:foodName.value.trim(),amount:foodAmount.value.trim(),calories:+foodCal.value||0,protein:+foodPro.value||0,fat:+foodFat.value||0,carbs:+foodCarb.value||0};if(!f.name){alert("請輸入食物名稱");return}getFoodRecord().foods.push(f);render()}
+function deleteFood(i){getFoodRecord().foods.splice(i,1);render()}
+function clearFood(){if(confirm("清除這天所有飲食紀錄？")){getFoodRecord().foods=[];render()}}
+
+function typeName(t){return t==="push"?"推":t==="pull"?"拉":"腿"}
+function renderTraining(){
+ const d=state.dates.training,r=getTrainingRecord();
+ document.getElementById("mainContent").innerHTML=`
+ <div class="topbar"><div><h2>納瑟斯檔案｜${d===today()?"今日訓練":d}</h2><div class="muted">黑、灰、金主題。記錄每次訓練的項目、sets 與 reps。</div></div>
+ <div class="toolbar"><button class="ghost" onclick="inheritTraining()">繼承某一天項目</button><button class="danger" onclick="clearTraining()">清除當日</button></div></div>
+ <div class="panel"><div class="grid grid-3"><div><div class="section-title">日期</div><input type="date" value="${d}" onchange="state.dates.training=this.value;render()"></div><div><div class="section-title">訓練類型</div><select onchange="getTrainingRecord().type=this.value;render()"><option value="push" ${r.type==="push"?"selected":""}>推</option><option value="pull" ${r.type==="pull"?"selected":""}>拉</option><option value="legs" ${r.type==="legs"?"selected":""}>腿</option></select></div><div><div class="section-title">新增項目</div><div class="grid grid-2"><input id="newExerciseName" placeholder="例如 槓鈴臥推"><button class="primary" onclick="addExercise()">新增</button></div></div></div></div>
+ <div class="panel"><div class="section-title">${typeName(r.type)}｜訓練項目</div>${r.exercises.length?r.exercises.map((ex,ei)=>exerciseHTML(ex,ei)).join(""):'<div class="empty">尚未新增訓練項目。</div>'}</div>`;
+}
+function exerciseHTML(ex,ei){return `<div class="exercise-card"><div class="exercise-head"><strong>${esc(ex.name)}</strong><div><button onclick="addSet(${ei})">新增 set</button> <button class="danger" onclick="deleteExercise(${ei})">刪除項目</button></div></div>${ex.sets.map((s,si)=>`<div class="set-row"><input type="number" value="${s.weight??""}" placeholder="重量，可空白" onchange="updateSet(${ei},${si},'weight',this.value)"><input type="number" value="${s.reps??""}" placeholder="reps" onchange="updateSet(${ei},${si},'reps',this.value)"><button class="danger" onclick="deleteSet(${ei},${si})">刪除</button></div>`).join("")||'<div class="muted">尚無 set。</div>'}</div>`}
+function addExercise(){const name=newExerciseName.value.trim();if(!name){alert("請輸入項目名稱");return}getTrainingRecord().exercises.push({name,sets:[{weight:"",reps:""}]});render()}
+function deleteExercise(i){getTrainingRecord().exercises.splice(i,1);render()}
+function addSet(i){getTrainingRecord().exercises[i].sets.push({weight:"",reps:""});render()}
+function deleteSet(i,j){getTrainingRecord().exercises[i].sets.splice(j,1);render()}
+function updateSet(i,j,k,v){getTrainingRecord().exercises[i].sets[j][k]=v;save()}
+function clearTraining(){if(confirm("清除這天所有訓練紀錄？")){getTrainingRecord().exercises=[];render()}}
+function inheritTraining(){
+ const dates=Object.keys(state.training.records).filter(d=>d!==state.dates.training).sort((a,b)=>b.localeCompare(a));
+ if(!dates.length){alert("目前沒有可繼承的過去訓練日。");return}
+ const src=prompt("輸入要繼承的日期：\\n"+dates.slice(0,20).join("\\n"));
+ if(!src||!state.training.records[src])return;
+ const from=state.training.records[src],cur=getTrainingRecord();
+ cur.type=from.type;
+ cur.exercises=clone(from.exercises).map(ex=>({name:ex.name,sets:ex.sets.map(()=>({weight:"",reps:""}))}));
+ render();
+}
+
+function renderBody(){
+ const d=state.dates.body,r=getBodyRecord();
+ document.getElementById("mainContent").innerHTML=`
+ <div class="topbar"><div><h2>卡利斯檔案｜${d===today()?"今日體態":d}</h2><div class="muted">紫色與藍色主題。記錄體重、腰圍、臂圍與補碳日。</div></div><div class="toolbar"><button class="danger" onclick="clearBody()">清除當日</button></div></div>
+ <div class="panel"><div class="grid grid-4"><div><div class="section-title">日期</div><input type="date" value="${d}" onchange="state.dates.body=this.value;render()"></div><div><div class="section-title">體重 kg</div><input type="number" step="0.1" value="${esc(r.weight)}" onchange="getBodyRecord().weight=this.value;render()"></div><div><div class="section-title">腰圍 cm</div><input type="number" step="0.1" value="${esc(r.waist)}" onchange="getBodyRecord().waist=this.value;render()"></div><div><div class="section-title">臂圍 cm</div><input type="number" step="0.1" value="${esc(r.arm)}" onchange="getBodyRecord().arm=this.value;render()"></div></div>
+ <div style="margin-top:14px"><label><input type="checkbox" style="width:auto" ${r.carb?"checked":""} onchange="getBodyRecord().carb=this.checked;render()"> 補碳日</label></div></div>
+ <div class="panel"><div class="section-title">目前紀錄</div><div class="summary"><div class="summary-card"><div class="muted">體重</div><div class="value">${r.weight||"-"}</div></div><div class="summary-card"><div class="muted">腰圍</div><div class="value">${r.waist||"-"}</div></div><div class="summary-card"><div class="muted">臂圍</div><div class="value">${r.arm||"-"}</div></div><div class="summary-card"><div class="muted">標籤</div><div class="value" style="font-size:20px">${r.carb?"補碳日":"一般日"}</div></div></div></div>`;
+}
+function clearBody(){if(confirm("清除這天的體態紀錄？")){state.body.records[state.dates.body]={weight:"",waist:"",arm:"",carb:false};render()}}
+
+function openSettings(){renderSettings();settingsModal.classList.add("show")}
+function closeSettings(){settingsModal.classList.remove("show")}
+function renderSettings(){settingsContent.innerHTML=Object.entries(state.food.strategies).map(([sid,s])=>`<div class="panel"><h3>${esc(s.name)}</h3><div class="grid grid-2"><input data-sid="${sid}" data-field="name" value="${esc(s.name)}"><span></span></div>${state.food.dayTypes.map(day=>{let tar=s.targets?.[day.id]||{},note=s.notes?.[day.id]||"";return `<div class="section-title">${day.name}</div><input data-sid="${sid}" data-day="${day.id}" data-field="note" value="${esc(note)}"><div class="grid grid-4" style="margin-top:8px"><input data-sid="${sid}" data-day="${day.id}" data-field="calories" type="number" value="${tar.calories??""}" placeholder="熱量"><input data-sid="${sid}" data-day="${day.id}" data-field="protein" type="number" value="${tar.protein??""}" placeholder="蛋白質"><input data-sid="${sid}" data-day="${day.id}" data-field="fat" type="number" value="${tar.fat??""}" placeholder="脂肪"><input data-sid="${sid}" data-day="${day.id}" data-field="carbs" type="number" value="${tar.carbs??""}" placeholder="碳水"></div>`}).join("")}${sid!=="cutting"&&sid!=="bulking"?`<br><button class="danger" onclick="deleteStrategy('${sid}')">刪除此方針</button>`:""}</div>`).join("")}
+function saveSettings(){document.querySelectorAll("#settingsContent input").forEach(input=>{let sid=input.dataset.sid,day=input.dataset.day,field=input.dataset.field;if(field==="name"){state.food.strategies[sid].name=input.value.trim()||state.food.strategies[sid].name;return}state.food.strategies[sid].targets??={};state.food.strategies[sid].targets[day]??={};state.food.strategies[sid].notes??={};if(field==="note")state.food.strategies[sid].notes[day]=input.value;else state.food.strategies[sid].targets[day][field]=+input.value||0});renderSettings();render();alert("已儲存")}
+function addStrategy(){let name=newStrategyName.value.trim();if(!name)return alert("請輸入方針名稱");let id="custom_"+Date.now();state.food.strategies[id]={name,notes:{},targets:{}};state.food.dayTypes.forEach(d=>{state.food.strategies[id].notes[d.id]=`${d.name} 尚未設定`;state.food.strategies[id].targets[d.id]={calories:0,protein:0,fat:0,carbs:0}});renderSettings();render()}
+function deleteStrategy(id){if(confirm("刪除此自訂方針？")){delete state.food.strategies[id];Object.values(state.food.records).forEach(r=>{if(r.strategy===id)r.strategy="cutting"});renderSettings();render()}}
+function resetSettings(){if(confirm("恢復預設飲食方針？飲食紀錄會保留。")){state.food.dayTypes=clone(defaultState.food.dayTypes);state.food.strategies=clone(defaultState.food.strategies);renderSettings();render()}}
+function exportAll(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`abyss_tracker_backup_${today()}.json`;a.click();URL.revokeObjectURL(url)}
+function importAll(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{state=deepMerge(clone(defaultState),JSON.parse(reader.result));save();render();alert("匯入完成")}catch{alert("匯入失敗，檔案格式不正確")}};reader.readAsText(file)}
+if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{})}
+render();
+</script>
+</body>
+</html>

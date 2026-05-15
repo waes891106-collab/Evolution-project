@@ -1,13 +1,1 @@
-{
-  "name": "深淵進化紀錄",
-  "short_name": "深淵進化",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#05070a",
-  "theme_color": "#05070a",
-  "description": "多人飲食、訓練、體態追蹤 PWA",
-  "icons": [
-    {"src":"icon-192.svg","sizes":"192x192","type":"image/svg+xml"},
-    {"src":"icon-512.svg","sizes":"512x512","type":"image/svg+xml"}
-  ]
-}
+{"name": "\u6df1\u6df5\u9032\u5316"}

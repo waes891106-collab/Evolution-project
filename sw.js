@@ -1,4 +1,4 @@
-const CACHE_NAME = "abyss-tracker-v1";
+const CACHE_NAME = "abyss-evolution-v2";
 const ASSETS = ["./", "./index.html", "./manifest.json", "./icon-192.svg", "./icon-512.svg"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));

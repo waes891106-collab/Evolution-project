@@ -1,21 +1,13 @@
 {
-  "name": "深淵訓練紀錄",
-  "short_name": "深淵紀錄",
+  "name": "深淵進化紀錄",
+  "short_name": "深淵進化",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#07090d",
-  "theme_color": "#080b10",
-  "description": "飲食、訓練與體態紀錄 PWA",
+  "background_color": "#05070a",
+  "theme_color": "#05070a",
+  "description": "多人飲食、訓練、體態追蹤 PWA",
   "icons": [
-    {
-      "src": "icon-192.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml"
-    },
-    {
-      "src": "icon-512.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml"
-    }
+    {"src":"icon-192.svg","sizes":"192x192","type":"image/svg+xml"},
+    {"src":"icon-512.svg","sizes":"512x512","type":"image/svg+xml"}
   ]
 }
